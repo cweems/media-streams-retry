@@ -77,7 +77,7 @@ app.post('/retry', async (req, res) => {
     // approach to check storage
     await sleep(2000)
     
-    if (callErrored) {
+    if (storage.has(CallSid)) {
         const connect = response.connect();
         connect.stream({
             url: `wss://${process.env.SERVER}/connection`,

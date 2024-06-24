@@ -1,8 +1,8 @@
 require('dotenv').config();
 const request = require("supertest")
-const baseURL = `http://${process.env.SERVER}`;
+const baseURL = 'localhost:3000';
 
-describe("POST /retry", () => { 
+describe("POST /retry", () => {
     const sampleErrorStatus = {
         AccountSid: 'ACXXX',
         CallSid: 'CA123',
@@ -28,7 +28,6 @@ describe("POST /retry", () => {
     }
 
     it("should return hangup if no error", async () => {
-
         await request(baseURL).post("/status").send(sampleSuccessStatus);
         const response = await request(baseURL).post("/retry").send(sampleCallWebhook);
  
@@ -37,12 +36,11 @@ describe("POST /retry", () => {
     });
 
     it("should return stream if error", async () => {
-
         await request(baseURL).post("/status").send(sampleErrorStatus);
         const response = await request(baseURL).post("/retry").send(sampleCallWebhook);
  
         expect(response.statusCode).toBe(200);
-        expect(response.text).toBe("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Connect><Stream url=\"wss://http://localhost:3000/connection\" statusCallback=\"http://http://localhost:3000/status\"/></Connect><Redirect method=\"POST\">http://localhost:3000/retry</Redirect></Response>");
+        expect(response.text).toBe(`<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Connect><Stream url=\"wss://${process.env.SERVER}/connection\" statusCallback=\"https://${process.env.SERVER}/status\" statusCallbackMethod=\"POST\"/></Connect><Redirect method=\"POST\">/retry</Redirect></Response>`);
 
         const response2 = await request(baseURL).post("/retry").send(sampleCallWebhook);
         expect(response2.statusCode).toBe(200);
