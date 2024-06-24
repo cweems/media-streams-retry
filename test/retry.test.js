@@ -1,6 +1,6 @@
 require('dotenv').config();
 const request = require("supertest")
-const baseURL = process.env.SERVER;
+const baseURL = `http://${process.env.SERVER}`;
 
 describe("POST /retry", () => { 
     const sampleErrorStatus = {
